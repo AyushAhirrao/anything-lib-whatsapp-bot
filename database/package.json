@@ -1,0 +1,43 @@
+{
+  "_from": "desk-native-database",
+  "_id": "desk-native-database@1.0.2",
+  "_inBundle": false,
+  "_integrity": "sha512-QsvUXqLHqO39+lTzwAB7gaRXr8P5VID4FFl826afEHSc2cmGniJ0HLhLjv0dioz0Cmka9ogfqhAXk4d7TlnOww==",
+  "_location": "/desk-native-database",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "desk-native-database",
+    "name": "desk-native-database",
+    "escapedName": "desk-native-database",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/desk-native-database/-/desk-native-database-1.0.2.tgz",
+  "_shasum": "ea76f69eaca81e6c971c6ca3a96a08832ef6851a",
+  "_spec": "desk-native-database",
+  "_where": "C:\\Users\\ayush\\Desktop\\wp-bot",
+  "author": {
+    "name": "TSC",
+    "email": "thesudoersclug@gmail.com"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "prompts": "^2.4.2"
+  },
+  "deprecated": false,
+  "description": "A simple JSON database by desk-native",
+  "license": "ISC",
+  "main": "src/database.js",
+  "name": "desk-native-database",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.2"
+}

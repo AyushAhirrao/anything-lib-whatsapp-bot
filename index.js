@@ -1,6 +1,14 @@
 // const client = new Client();
 const qrcode = require('qrcode-terminal');
 const fs = require("fs")
+const dnadb = require("desk-native-database")
+
+const db = dnadb()
+db.createCollection("./.records")
+db.addData(".records", {
+    "name": "hello"
+})
+
 const {
     Client,
     LocalAuth,
