@@ -8,6 +8,7 @@ const createCollection = require('./lib/create-collection/createCollection.js');
 const getAllData = require("./lib/data-access/getAllData.js");
 
 const getDataById = require("./lib/data-access/getDataById.js");
+const getDataByKeywords = require("./lib/data-access/getDataByKeywords.js");
 
 // data-manipulation functions
 
@@ -25,7 +26,7 @@ const deleteData = require('./lib/data-manipulation/delete.js');
 
 // desk-native-database
 function database() {
-    const db_config_path = path.join(process.cwd(), 'config/desk-native-database/db_config.json');
+    const db_config_path = path.join(process.cwd(), '.database/config/desk-native-database/db_config.json');
     const db_config = JSON.parse(fs.readFileSync(db_config_path));
     const DB_DIR = db_config.path;
 
@@ -34,6 +35,7 @@ function database() {
         createCollection: (filename) => createCollection(DB_DIR, filename),
         getAllData: (filename) => getAllData(DB_DIR, filename),
         getDataById: (filename, id) => getDataById(DB_DIR, filename, id),
+        getDataById: (filename, keyword) => getDataByKeywords(DB_DIR, filename, keyword),
         addData: (filename, newData) => addData(DB_DIR, filename, newData),
         updateData: (filename, id, newData) => updateData(DB_DIR, filename, id, newData),
         deleteData: (filename, id, fields) => deleteData(DB_DIR, filename, id, fields)

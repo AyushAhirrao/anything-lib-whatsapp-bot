@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "desk-native-database": "^1.0.2",
     "fs": "0.0.1-security",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "https://github.com/Julzk/whatsapp-web.js/tarball/jkr_hotfix_7",
