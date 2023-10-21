@@ -8,7 +8,9 @@ const createCollection = require('./lib/create-collection/createCollection.js');
 const getAllData = require("./lib/data-access/getAllData.js");
 
 const getDataById = require("./lib/data-access/getDataById.js");
+
 const getDataByKeywords = require("./lib/data-access/getDataByKeywords.js");
+const getAllDataAndStatus = require("./lib/data-access/getAllDataAndStatus.js");
 
 // data-manipulation functions
 
@@ -35,7 +37,8 @@ function database() {
         createCollection: (filename) => createCollection(DB_DIR, filename),
         getAllData: (filename) => getAllData(DB_DIR, filename),
         getDataById: (filename, id) => getDataById(DB_DIR, filename, id),
-        getDataById: (filename, keyword) => getDataByKeywords(DB_DIR, filename, keyword),
+        getDataByKeywords: (filename, keyword) => getDataByKeywords(DB_DIR, filename, keyword),
+        getAllDataAndStatus: (filename) => getAllDataAndStatus(DB_DIR, filename),
         addData: (filename, newData) => addData(DB_DIR, filename, newData),
         updateData: (filename, id, newData) => updateData(DB_DIR, filename, id, newData),
         deleteData: (filename, id, fields) => deleteData(DB_DIR, filename, id, fields)

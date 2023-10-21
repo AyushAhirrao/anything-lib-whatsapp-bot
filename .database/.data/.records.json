@@ -1,34 +1,76 @@
 [
   {
-    "name": "John",
-    "email": "john.doe@example.com",
-    "id": 1
-  },
-  {
-    "name": "John",
-    "email": "john.doe@example.com",
+    "item": "Cycle",
+    "available": true,
+    "name": "Shriram Khandbahale",
+    "contact": "9400293203",
     "keywords": [
       "cycle",
-      "duchaki"
+      "bike"
     ],
-    "id": 2
+    "image_path": ".database/.data/.images/1697881305334Cycle.jpg",
+    "id": "8530151e-1f48-4ef1-866f-34974919f05f"
   },
   {
-    "name": "John",
-    "email": "john.doe@example.com",
+    "item": "Cycle",
+    "available": false,
+    "name": "Shriram Khandbahale",
+    "contact": "9400293203",
     "keywords": [
-      "car",
-      "gadi"
+      "cycle",
+      "bike"
     ],
-    "id": 3
+    "image_path": ".database/.data/.images/1697881340731Cycle.jpg",
+    "id": "d974e169-2f85-44bc-aa61-51b8d9360544"
   },
   {
-    "name": "shriram",
-    "email": "shriram@anything.org",
+    "item": "Cycle",
+    "available": false,
+    "name": "Shriram Khandbahale",
+    "contact": "9400293203",
     "keywords": [
-      "cpu",
-      "camputar"
+      "cycle",
+      "bike"
     ],
-    "id": 4
+    "image_path": ".database/.data/.images/1697882356573Cycle.jpg",
+    "id": "92a9b6c1-a02f-4bf8-8a06-43ef2ae3f090"
+  },
+  {
+    "item": "Cycle",
+    "available": true,
+    "name": "Shriram Khandbahale",
+    "contact": "9400293203",
+    "keywords": [
+      "cycle",
+      "bike"
+    ],
+    "image_path": ".database/.data/.images/1697882511983Cycle.jpg",
+    "id": "23b1e261-95a7-4c50-9f50-77e7e3337f04"
+  },
+  {
+    "item": "hehe",
+    "available": false,
+    "name": "Shriram Khandbahale",
+    "contact": "9400293203",
+    "keywords": [
+      "cycle",
+      "bike"
+    ],
+    "image_path": ".database/.data/.images/1697882519143hehe.jpg",
+    "id": "70894ff2-a222-43da-9491-7cd0e946400f"
+  },
+  {
+    "item": "mark shuturmurg",
+    "available": false,
+    "name": "Shriram",
+    "contact": "9648684043",
+    "keywords": [
+      "facebook",
+      "mark",
+      "instaa",
+      "ostrich"
+    ],
+    "image_path": ".database/.data/.images/1697884481138mark shuturmurg.jpg",
+    "id": "642a03e4-ef4f-4ac8-b014-870967f41524"
   }
 ]

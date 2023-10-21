@@ -16,13 +16,17 @@ const db = database()
 // console.log(generatedId);
 
 // // get the specific data by its id
-let dataById = db.getDataById(".records", "cpu");
-console.log(typeof (dataById));
+
 
 const {
     Client,
-    LocalAuth
+    LocalAuth,
+    MessageMedia
 } = require('whatsapp-web.js');
+const {
+    fileURLToPath
+} = require('url');
+const getDataByKeywords = require('./.database/src/lib/data-access/getDataByKeywords');
 
 const client = new Client({
     authStrategy: new LocalAuth({
@@ -43,17 +47,30 @@ client.on('ready', () => {
     console.log('Client is ready!');
 });
 
-client.on('message', message => {
-    console.log("message obj - ", message)
+client.on('message', async message => {
+    // console.log("message obj - ", message)
     if (message.from === "120363174223172858@g.us") {
         if (message.body.startsWith("!list")) {
-
             const msg = message.body
             const parsedResult = parseListMessage(msg);
 
             if (message.type === "image") {
+
+
                 if (parsedResult) {
-                    message.reply(`Your Item "${parsedResult.item}" has listed successfully`)
+                    console.log("entered")
+                    const media = await message.downloadMedia()
+                    const img_path = `.database/.data/.images/${Date.now()}${parsedResult.item}.${getFileExtensionFromMimeType(media.mimetype)}`;
+                    fs.writeFileSync(img_path, media.data, 'base64');
+                    const item_id = db.addData(".records", {
+                        "item": parsedResult.item,
+                        "available": true,
+                        "name": parsedResult.name,
+                        "contact": parsedResult.contact,
+                        "keywords": parsedResult.keywords,
+                        "image_path": img_path
+                    })
+                    message.reply(`Your Item "${parsedResult.item}" with item id "${item_id}" has listed successfully`)
                 } else {
                     message.reply(`*Invalid format - kindly list item with below format*\n\n!list\n\nitem: _<item_name>_\nname: _<your_name>_\ncontact: _<contact_no>_\nkeywords: _<keyword-1, keyword-2, keyword-n>_\n`)
                 }
@@ -61,12 +78,100 @@ client.on('message', message => {
                 message.reply("Please attach the image of item!")
             }
 
+
         }
+
+        // Retrieving data (!find items)
+        if (message.body === "!find") {
+            stat = db.getAllDataAndStatus(".records");
+            message.reply(stat)
+        }
+
+        // !find args
+        const words = message.body.trim().toLocaleLowerCase().split(/\s+/);
+        const keyword = words[1];
+        const available = words[2];
+
+        if (message.body.trim().toLocaleLowerCase().startsWith("!find ") && available === "available") {
+            const stat = db.getDataByKeywords(".records", keyword)
+            let available_flag = false
+            if (!stat) {
+                message.reply("Item not found")
+
+            } else {
+                stat.forEach(e => {
+                    if (e.available) {
+                        // Assuming you have the image data in e.image_path, adjust accordingly
+                        const imageBuffer = fs.readFileSync(e.image_path); // Read the image file
+
+                        const media = new MessageMedia('image/jpeg', imageBuffer.toString('base64'));
+                        const caption = `Item_id: ${e.id}\n\nItem: ${e.item}\nName: ${e.name}\nContact: ${e.contact}\nStatus: ${e.available ? "available" : "not available"}`;
+
+                        client.sendMessage(message.from, media, {
+                            caption: caption
+                        });
+
+                        available_flag = true
+                    } else {
+                        available_flag = false
+                    }
+                });
+
+                if (!available_flag) {
+                    message.reply("Item not available")
+                }
+            }
+        } else if (message.body.trim().toLocaleLowerCase().startsWith("!find ") && available === undefined) {
+            const stat = db.getDataByKeywords(".records", keyword)
+
+            if (!stat) {
+                message.reply("Item not found")
+
+            } else {
+                stat.forEach(e => {
+                    // Assuming you have the image data in e.image_path, adjust accordingly
+                    const imageBuffer = fs.readFileSync(e.image_path); // Read the image file
+
+                    const media = new MessageMedia('image/jpeg', imageBuffer.toString('base64'));
+                    const caption = `Item_id: ${e.id}\n\nItem: ${e.item}\nName: ${e.name}\nContact: ${e.contact}\nStatus: ${e.available ? "available" : "not available"}`;
+
+                    client.sendMessage(message.from, media, {
+                        caption: caption
+                    });
+                });
+            }
+
+        } else if (message.body.trim().toLocaleLowerCase().startsWith("!find ")) {
+            message.reply("*Invalid format* - !find <keyword> available")
+        }
+
+
+        if (message.body.trim().toLocaleLowerCase().startsWith("!confirm")) {
+            const words = message.body.trim().toLocaleLowerCase().split(/\s+/);
+
+            console.log(words.length)
+            if (words.length != 2) {
+                message.reply("*Invalid Format* - !confirm <item_id>")
+            } else {
+                const id = words[1];
+                const stat = db.updateData(".records", id, {
+                    "available": false
+                })
+
+                if (stat) {
+                    message.reply("Confirmed")
+                } else {
+                    message.reply("No such item is listed")
+                }
+            }
+        }
+
     }
 });
 
 
 client.initialize();
+
 function parseListMessage(message) {
     const regex = /^!list\s+item:\s+(.+)\s+name:\s+(.+)\s+contact:\s*([6-9]\d{9})\s*keywords:\s+([^\n]+)\s*$/i;
 
@@ -82,12 +187,12 @@ function parseListMessage(message) {
         const isValidIndianContact = /^[6-9]\d{9}$/.test(contactNo);
 
         if (!hasUnwantedSymbols && isValidIndianContact) {
-            const keywordsArray = keywords.split(',').map(keyword => keyword.trim());
+            const keywordsArray = keywords.split(',').map(keyword => keyword.trim().toLocaleLowerCase());
 
             const result = {
-                item: item.trim(),
-                name: ownerName.trim(),
-                contact: contactNo.trim(),
+                item: item.trim().toLocaleLowerCase(),
+                name: ownerName.trim().toLocaleLowerCase(),
+                contact: contactNo.trim().toLocaleLowerCase(),
                 keywords: keywordsArray,
             };
 
@@ -97,5 +202,23 @@ function parseListMessage(message) {
         }
     } else {
         return null; // Message doesn't match the expected format
+    }
+}
+
+function getFileExtensionFromMimeType(mimeType) {
+    const mimeToExtension = {
+        'image/jpeg': 'jpg',
+        'image/png': 'png',
+    };
+
+    // Convert MIME type to lowercase for case-insensitive comparison
+    const lowerCaseMimeType = mimeType.toLowerCase();
+
+    // Check if the mapping contains the provided MIME type
+    if (mimeToExtension.hasOwnProperty(lowerCaseMimeType)) {
+        return mimeToExtension[lowerCaseMimeType];
+    } else {
+        // If the MIME type is not in the mapping, return null or handle accordingly
+        return null;
     }
 }
