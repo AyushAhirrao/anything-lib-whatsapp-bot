@@ -49,6 +49,8 @@ client.on('message', async message => {
     const transactions = "120363174977415228@g.us"
 
     // console.log("message obj - ", message)
+
+    // listing 
     if (message.from == inventory) {
         if (message.body.startsWith("!list")) {
             const msg = message.body
@@ -66,11 +68,12 @@ client.on('message', async message => {
                         "owner": parsedResult.owner,
                         "contact": parsedResult.contact,
                         "keywords": parsedResult.keywords,
+                        "note": parsedResult.note,
                         "image_path": img_path
                     })
                     message.reply(`Your Item "${parsedResult.item}" with item id "${item_id}" has listed successfully`)
                 } else {
-                    message.reply(`*Invalid format - kindly list item with below format*\n\n!list\n\nitem: _<item_name>_\nowner: _<your_name>_\ncontact: _<contact_no>_\nkeywords: _<keyword-1, keyword-2, keyword-n>_\n`)
+                    message.reply(`*Invalid format - kindly list item with below format*\n\n!list\n\nitem: _<item_name>_\nowner: _<your_name>_\ncontact: _<contact_no>_\nkeywords: _<keyword-1, keyword-2, keyword-n>_\nnote: _<note (optional)>_`)
                 }
             } else {
                 message.reply("Please attach the image of item!")
@@ -78,7 +81,7 @@ client.on('message', async message => {
         }
 
         // Retrieving data (!find items)
-        if (message.body === "!find") {
+        if (message.body.trim().toLocaleLowerCase() === "!find") {
             stat = db.getAllDataAndStatus(".records");
             message.reply(stat)
         }
@@ -86,9 +89,9 @@ client.on('message', async message => {
         // !find args
         const words = message.body.trim().toLocaleLowerCase().split(/\s+/);
         const keyword = words[1];
-        const available = words[2];
+        const available = words[words.length - 1];
 
-        if (message.body.trim().toLocaleLowerCase().startsWith("!find ") && available === "available") {
+        if (message.body.trim().toLocaleLowerCase().startsWith("!find ") && message.body.trim().toLocaleLowerCase().endsWith("available")) {
             const stat = db.getDataByKeywords(".records", keyword)
             let available_flag = false
             if (!stat) {
@@ -101,7 +104,7 @@ client.on('message', async message => {
                         const imageBuffer = fs.readFileSync(e.image_path); // Read the image file
 
                         const media = new MessageMedia('image/jpeg', imageBuffer.toString('base64'));
-                        const caption = `Item ID: ${e.id}\n\nItem: ${e.item}\nOwner: ${e.owner}\nContact: ${e.contact}\nStatus: ${e.available ? "available" : "not available"}`;
+                        const caption = `Item ID: ${e.id}\n\nItem: ${e.item.join(" ")}\nOwner: ${e.owner}\nContact: ${e.contact}\nStatus: ${e.available ? "available" : "not available"} ${(e.note != null) ? "\nNote: "+e.note : "" }`;
 
                         client.sendMessage(message.from, media, {
                             caption: caption
@@ -117,7 +120,7 @@ client.on('message', async message => {
                     message.reply("Item not available")
                 }
             }
-        } else if (message.body.trim().toLocaleLowerCase().startsWith("!find ") && available === undefined) {
+        } else if (message.body.trim().toLocaleLowerCase().startsWith("!find ") && !message.body.trim().toLocaleLowerCase().endsWith("available")) {
             const stat = db.getDataByKeywords(".records", keyword)
 
             if (!stat) {
@@ -129,7 +132,7 @@ client.on('message', async message => {
                     const imageBuffer = fs.readFileSync(e.image_path); // Read the image file
 
                     const media = new MessageMedia('image/jpeg', imageBuffer.toString('base64'));
-                    const caption = `Item ID: ${e.id}\n\nItem: ${e.item}\nOwner: ${e.owner}\nContact: ${e.contact}\nStatus: ${e.available ? "available" : "not available"}`;
+                    const caption = `Item ID: ${e.id}\n\nItem: ${e.item.join(" ")}\nOwner: ${e.owner}\nContact: ${e.contact}\nStatus: ${e.available ? "available" : "not available"} ${(e.note != null) ? "\nNote: "+e.note : "" }`;
 
                     client.sendMessage(message.from, media, {
                         caption: caption
@@ -181,37 +184,41 @@ client.on('message', async message => {
 client.initialize();
 
 function parseListMessage(message) {
-    const regex = /^!list\s+item:\s+(.+)\s+owner:\s+(.+)\s+contact:\s*([6-9]\d{9})\s*keywords:\s+([^\n]+)\s*$/i;
+    const regex = /^!list\s+item:\s+(.+)\s+owner:\s+(.+)\s+contact:\s*([6-9]\d{9})\s*keywords:\s+([^\n]+)\s*(?:note:\s*(.+)\s*)?$/i;
 
     const match = message.match(regex);
 
     if (match) {
-        const [, item, ownerName, contactNo, keywords] = match;
+        const [, items, ownerName, contactNo, keywords, note] = match;
 
-        // Check for unwanted symbols in item, ownerName, and keywords
-        const hasUnwantedSymbols = /[$%^()_+={};:'"<>/\\[\]\-\|]/.test(item + ownerName + keywords);
+        // Check for unwanted symbols in items, ownerName, keywords, and note
+        const hasUnwantedSymbols = /[$%^()_+={};:'"<>/\\[\]\-\|]/.test(items + ownerName + keywords + (note || ''));
 
         // Validate Indian contact number format
         const isValidIndianContact = /^[6-9]\d{9}$/.test(contactNo);
 
         if (!hasUnwantedSymbols && isValidIndianContact) {
+            const itemsArray = items.split(' ').map(item => item.trim().toLocaleLowerCase());
+            console.log(itemsArray)
             const keywordsArray = keywords.split(',').map(keyword => keyword.trim().toLocaleLowerCase());
 
             const result = {
-                item: item.trim().toLocaleLowerCase(),
+                item: itemsArray,
                 owner: ownerName.trim().toLocaleLowerCase(),
                 contact: contactNo.trim().toLocaleLowerCase(),
                 keywords: keywordsArray,
+                note: note ? note.trim() : null,
             };
 
             return result;
         } else {
-            return null; // Names, keywords, or item names contain unwanted symbols, or invalid contact format
+            return null; // Names, keywords, note, or item names contain unwanted symbols, or invalid contact format
         }
     } else {
         return null; // Message doesn't match the expected format
     }
 }
+
 
 function getFileExtensionFromMimeType(mimeType) {
     const mimeToExtension = {

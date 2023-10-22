@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "fs": "0.0.1-security",
+    "natural": "^6.8.0",
     "prompts": "^2.4.2",
     "qrcode-terminal": "^0.12.0",
     "uuid": "^9.0.1",
