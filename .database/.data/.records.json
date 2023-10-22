@@ -1,8 +1,8 @@
 [
   {
     "item": "Cycle",
-    "available": true,
-    "name": "Shriram Khandbahale",
+    "available": false,
+    "owner": "Shriram Khandbahale",
     "contact": "9400293203",
     "keywords": [
       "cycle",
@@ -14,7 +14,7 @@
   {
     "item": "Cycle",
     "available": false,
-    "name": "Shriram Khandbahale",
+    "owner": "Shriram Khandbahale",
     "contact": "9400293203",
     "keywords": [
       "cycle",
@@ -25,8 +25,8 @@
   },
   {
     "item": "Cycle",
-    "available": false,
-    "name": "Shriram Khandbahale",
+    "available": true,
+    "owner": "Shriram Khandbahale",
     "contact": "9400293203",
     "keywords": [
       "cycle",
@@ -38,7 +38,7 @@
   {
     "item": "Cycle",
     "available": true,
-    "name": "Shriram Khandbahale",
+    "owner": "Shriram Khandbahale",
     "contact": "9400293203",
     "keywords": [
       "cycle",
@@ -50,7 +50,7 @@
   {
     "item": "hehe",
     "available": false,
-    "name": "Shriram Khandbahale",
+    "owner": "Shriram Khandbahale",
     "contact": "9400293203",
     "keywords": [
       "cycle",
@@ -61,8 +61,8 @@
   },
   {
     "item": "mark shuturmurg",
-    "available": false,
-    "name": "Shriram",
+    "available": true,
+    "owner": "Shriram",
     "contact": "9648684043",
     "keywords": [
       "facebook",
@@ -72,5 +72,34 @@
     ],
     "image_path": ".database/.data/.images/1697884481138mark shuturmurg.jpg",
     "id": "642a03e4-ef4f-4ac8-b014-870967f41524"
+  },
+  {
+    "item": "laptop",
+    "available": true,
+    "owner": "root",
+    "contact": "9867543012",
+    "keywords": [
+      "lap",
+      "top",
+      "laptop",
+      "lappy",
+      "computer",
+      "pc"
+    ],
+    "image_path": ".database/.data/.images/1697891648518laptop.jpg",
+    "id": "80aca1d2-b574-4512-97e6-cd6ea30a5604"
+  },
+  {
+    "item": "debugger",
+    "available": false,
+    "owner": "tsc",
+    "contact": "9835123456",
+    "keywords": [
+      "programmer",
+      "ayush",
+      "debugger"
+    ],
+    "image_path": ".database/.data/.images/1697893475818debugger.jpg",
+    "id": "51590110-c1c4-4898-a9e5-de2df0a94942"
   }
 ]

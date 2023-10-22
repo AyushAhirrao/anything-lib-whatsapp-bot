@@ -23,10 +23,6 @@ const {
     LocalAuth,
     MessageMedia
 } = require('whatsapp-web.js');
-const {
-    fileURLToPath
-} = require('url');
-const getDataByKeywords = require('./.database/src/lib/data-access/getDataByKeywords');
 
 const client = new Client({
     authStrategy: new LocalAuth({
@@ -48,15 +44,17 @@ client.on('ready', () => {
 });
 
 client.on('message', async message => {
+
+    const inventory = "120363174223172858@g.us"
+    const transactions = "120363174977415228@g.us"
+
     // console.log("message obj - ", message)
-    if (message.from === "120363174223172858@g.us") {
+    if (message.from == inventory) {
         if (message.body.startsWith("!list")) {
             const msg = message.body
             const parsedResult = parseListMessage(msg);
 
             if (message.type === "image") {
-
-
                 if (parsedResult) {
                     console.log("entered")
                     const media = await message.downloadMedia()
@@ -65,20 +63,18 @@ client.on('message', async message => {
                     const item_id = db.addData(".records", {
                         "item": parsedResult.item,
                         "available": true,
-                        "name": parsedResult.name,
+                        "owner": parsedResult.owner,
                         "contact": parsedResult.contact,
                         "keywords": parsedResult.keywords,
                         "image_path": img_path
                     })
                     message.reply(`Your Item "${parsedResult.item}" with item id "${item_id}" has listed successfully`)
                 } else {
-                    message.reply(`*Invalid format - kindly list item with below format*\n\n!list\n\nitem: _<item_name>_\nname: _<your_name>_\ncontact: _<contact_no>_\nkeywords: _<keyword-1, keyword-2, keyword-n>_\n`)
+                    message.reply(`*Invalid format - kindly list item with below format*\n\n!list\n\nitem: _<item_name>_\nowner: _<your_name>_\ncontact: _<contact_no>_\nkeywords: _<keyword-1, keyword-2, keyword-n>_\n`)
                 }
             } else {
                 message.reply("Please attach the image of item!")
             }
-
-
         }
 
         // Retrieving data (!find items)
@@ -105,7 +101,7 @@ client.on('message', async message => {
                         const imageBuffer = fs.readFileSync(e.image_path); // Read the image file
 
                         const media = new MessageMedia('image/jpeg', imageBuffer.toString('base64'));
-                        const caption = `Item_id: ${e.id}\n\nItem: ${e.item}\nName: ${e.name}\nContact: ${e.contact}\nStatus: ${e.available ? "available" : "not available"}`;
+                        const caption = `Item ID: ${e.id}\n\nItem: ${e.item}\nOwner: ${e.owner}\nContact: ${e.contact}\nStatus: ${e.available ? "available" : "not available"}`;
 
                         client.sendMessage(message.from, media, {
                             caption: caption
@@ -133,7 +129,7 @@ client.on('message', async message => {
                     const imageBuffer = fs.readFileSync(e.image_path); // Read the image file
 
                     const media = new MessageMedia('image/jpeg', imageBuffer.toString('base64'));
-                    const caption = `Item_id: ${e.id}\n\nItem: ${e.item}\nName: ${e.name}\nContact: ${e.contact}\nStatus: ${e.available ? "available" : "not available"}`;
+                    const caption = `Item ID: ${e.id}\n\nItem: ${e.item}\nOwner: ${e.owner}\nContact: ${e.contact}\nStatus: ${e.available ? "available" : "not available"}`;
 
                     client.sendMessage(message.from, media, {
                         caption: caption
@@ -145,35 +141,47 @@ client.on('message', async message => {
             message.reply("*Invalid format* - !find <keyword> available")
         }
 
+        if (message.body.trim().toLocaleLowerCase().startsWith("!confirm")) {
+            message.reply("please confirm the transactions in the transactions channel ")
+        }
 
+    }
+
+    if (message.from == transactions) {
         if (message.body.trim().toLocaleLowerCase().startsWith("!confirm")) {
             const words = message.body.trim().toLocaleLowerCase().split(/\s+/);
 
-            console.log(words.length)
             if (words.length != 2) {
-                message.reply("*Invalid Format* - !confirm <item_id>")
+                message.reply("*Invalid Format* - !confirm <Item ID>")
             } else {
                 const id = words[1];
-                const stat = db.updateData(".records", id, {
-                    "available": false
-                })
+                const item = db.getDataById(".records", id)
 
-                if (stat) {
-                    message.reply("Confirmed")
+                if (item) {
+                    if (item.available) {
+                        const stat = db.updateData(".records", id, {
+                            "available": false
+                        })
+                        if (stat) {
+                            message.reply("Your transaction has been recorded")
+                        }
+                    } else {
+                        message.reply("Currently, the item is not available")
+                    }
                 } else {
                     message.reply("No such item is listed")
                 }
             }
+
         }
-
     }
-});
 
+});
 
 client.initialize();
 
 function parseListMessage(message) {
-    const regex = /^!list\s+item:\s+(.+)\s+name:\s+(.+)\s+contact:\s*([6-9]\d{9})\s*keywords:\s+([^\n]+)\s*$/i;
+    const regex = /^!list\s+item:\s+(.+)\s+owner:\s+(.+)\s+contact:\s*([6-9]\d{9})\s*keywords:\s+([^\n]+)\s*$/i;
 
     const match = message.match(regex);
 
@@ -191,7 +199,7 @@ function parseListMessage(message) {
 
             const result = {
                 item: item.trim().toLocaleLowerCase(),
-                name: ownerName.trim().toLocaleLowerCase(),
+                owner: ownerName.trim().toLocaleLowerCase(),
                 contact: contactNo.trim().toLocaleLowerCase(),
                 keywords: keywordsArray,
             };
