@@ -50,7 +50,7 @@ client.on('message', async message => {
 
     // console.log("message obj - ", message)
 
-    // listing 
+    // inventory group
     if (message.from == inventory) {
         if (message.body.startsWith("!list")) {
             const msg = message.body
@@ -89,7 +89,6 @@ client.on('message', async message => {
         // !find args
         const words = message.body.trim().toLocaleLowerCase().split(/\s+/);
         const keyword = words[1];
-        const available = words[words.length - 1];
 
         if (message.body.trim().toLocaleLowerCase().startsWith("!find ") && message.body.trim().toLocaleLowerCase().endsWith("available")) {
             const stat = db.getDataByKeywords(".records", keyword)
@@ -150,23 +149,29 @@ client.on('message', async message => {
 
     }
 
+    // transactions group
     if (message.from == transactions) {
-        if (message.body.trim().toLocaleLowerCase().startsWith("!confirm")) {
-            const words = message.body.trim().toLocaleLowerCase().split(/\s+/);
+        const words = message.body.trim().toLocaleLowerCase().split(/\s+/);
+        if (words.length == 3) {
+            if (message.body.trim().toLocaleLowerCase().startsWith("!confirm ") && message.body.trim().toLocaleLowerCase().endsWith(" borrow")) {
 
-            if (words.length != 2) {
-                message.reply("*Invalid Format* - !confirm <Item ID>")
-            } else {
-                const id = words[1];
-                const item = db.getDataById(".records", id)
+                const item_id = words[1];
+                const item = db.getDataById(".records", item_id)
 
                 if (item) {
                     if (item.available) {
-                        const stat = db.updateData(".records", id, {
+                        const stat = db.updateData(".records", item_id, {
                             "available": false
                         })
                         if (stat) {
-                            message.reply("Your transaction has been recorded")
+                            const transaction_id = db.addData(".transactions", {
+                                "borrower_contact": message.author,
+                                "duration": null,
+                                "item_id": item_id,
+                                "timestamp": Date.now()
+
+                            })
+                            message.reply(`Your transaction has been recorded, transaction id - ${transaction_id}`)
                         }
                     } else {
                         message.reply("Currently, the item is not available")
@@ -174,8 +179,15 @@ client.on('message', async message => {
                 } else {
                     message.reply("No such item is listed")
                 }
+            } else if (message.body.trim().toLocaleLowerCase().startsWith("!confirm ") && message.body.trim().toLocaleLowerCase().endsWith(" return")) {
+                message.reply("Kam chalu ahe thod thabave!")
+            } else {
+                message.reply("*Invalid Format* - !confirm <Item ID> borrow || !confirm <Item ID> return")
             }
 
+
+        } else {
+            message.reply("*Invalid Format* - !confirm <Item ID> borrow || !confirm <Item ID> return")
         }
     }
 

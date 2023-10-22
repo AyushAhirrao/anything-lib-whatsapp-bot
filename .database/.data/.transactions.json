@@ -1,0 +1,15 @@
+[
+  {
+    "lender_contact": "1245678899",
+    "borrower_contact": "1245678899",
+    "item_id": "123343444434",
+    "timestamp": ""
+  },
+  {
+    "borrower_contact": "917507736625@c.us",
+    "duration": null,
+    "item_id": "7c3b20ea-0f1e-4d83-8cb0-4601c4ebb075",
+    "timestamp": 1697991201874,
+    "id": "99e18bf9-3300-447c-93eb-a69f168947ff"
+  }
+]
