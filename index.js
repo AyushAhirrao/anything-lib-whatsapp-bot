@@ -49,6 +49,7 @@ client.on('message', async message => {
     const transactions = "120363174977415228@g.us"
 
     // console.log("message obj - ", message)
+    const args = message.body.trim().toLocaleLowerCase().split(/\s+/);
 
     // inventory group
     if (message.from == inventory) {
@@ -58,7 +59,6 @@ client.on('message', async message => {
 
             if (message.type === "image") {
                 if (parsedResult) {
-                    console.log("entered")
                     const media = await message.downloadMedia()
                     const img_path = `.database/.data/.images/${Date.now()}${parsedResult.item}.${getFileExtensionFromMimeType(media.mimetype)}`;
                     fs.writeFileSync(img_path, media.data, 'base64');
@@ -69,9 +69,10 @@ client.on('message', async message => {
                         "contact": parsedResult.contact,
                         "keywords": parsedResult.keywords,
                         "note": parsedResult.note,
+                        "owner_chat_id": message.author,
                         "image_path": img_path
                     })
-                    message.reply(`Your Item "${parsedResult.item}" with item id "${item_id}" has listed successfully`)
+                    message.reply(`Your Item "${parsedResult.item.join(" ")}" with item id "${item_id}" has listed successfully`)
                 } else {
                     message.reply(`*Invalid format - kindly list item with below format*\n\n!list\n\nitem: _<item_name>_\nowner: _<your_name>_\ncontact: _<contact_no>_\nkeywords: _<keyword-1, keyword-2, keyword-n>_\nnote: _<note (optional)>_`)
                 }
@@ -83,12 +84,12 @@ client.on('message', async message => {
         // Retrieving data (!find items)
         if (message.body.trim().toLocaleLowerCase() === "!find") {
             stat = db.getAllDataAndStatus(".records");
+
             message.reply(stat)
         }
 
         // !find args
-        const words = message.body.trim().toLocaleLowerCase().split(/\s+/);
-        const keyword = words[1];
+        const keyword = args[1];
 
         if (message.body.trim().toLocaleLowerCase().startsWith("!find ") && message.body.trim().toLocaleLowerCase().endsWith("available")) {
             const stat = db.getDataByKeywords(".records", keyword)
@@ -143,21 +144,49 @@ client.on('message', async message => {
             message.reply("*Invalid format* - !find <keyword> available")
         }
 
-        if (message.body.trim().toLocaleLowerCase().startsWith("!confirm")) {
-            message.reply("please confirm the transactions in the transactions channel ")
-        }
+        // unlisting item
+        if (message.body.trim().toLocaleLowerCase() == "!unlist") {} else if (message.body.trim().toLocaleLowerCase().startsWith("!unlist ")) {
+            const item_id = args[1];
+            const item = db.getDataById(".records", item_id)
 
+            if (!item) {
+                message.reply("No such item is listed")
+            } else {
+                const item_owner_id = item.owner_chat_id
+                const item_image_path = item.image_path
+
+                console.log(item)
+                if (item_owner_id == message.author) {
+                    console.log("owner matched")
+                    const stat = db.deleteData(".records", item_id)
+                    console.log(stat)
+                    if (stat) {
+                        fs.unlink(item_image_path, (err) => {
+                            if (err) {
+                                console.error(`Error deleting file: ${err}`);
+                            } else {
+                                message.reply(`Your item "${item.item.join(" ")}" has unlisted successfully`)
+                            }
+                        });
+                    } else {
+                        message.reply("Error - unable to unlist the item")
+                    }
+                } else {
+                    message.reply("Your don't have rights to unlist this item")
+                }
+            }
+        }
     }
 
     // transactions group
     if (message.from == transactions) {
-        const words = message.body.trim().toLocaleLowerCase().split(/\s+/);
-        if (words.length == 3) {
+        const args = message.body.trim().toLocaleLowerCase().split(/\s+/);
+        if (args.length == 3) {
+
             if (message.body.trim().toLocaleLowerCase().startsWith("!confirm ") && message.body.trim().toLocaleLowerCase().endsWith(" borrow")) {
 
-                const item_id = words[1];
+                const item_id = args[1];
                 const item = db.getDataById(".records", item_id)
-
                 if (item) {
                     if (item.available) {
                         const stat = db.updateData(".records", item_id, {
@@ -165,11 +194,14 @@ client.on('message', async message => {
                         })
                         if (stat) {
                             const transaction_id = db.addData(".transactions", {
-                                "borrower_contact": message.author,
-                                "duration": null,
                                 "item_id": item_id,
-                                "timestamp": Date.now()
-
+                                "type": "borrow",
+                                "borrower_contact": message.author,
+                                "borrow_duration": null,
+                                "borrowed_timestamp": Date.now(),
+                                "returned_timestamp": "",
+                                "returned": false,
+                                "return_ack": false
                             })
                             message.reply(`Your transaction has been recorded, transaction id - ${transaction_id}`)
                         }
@@ -180,7 +212,33 @@ client.on('message', async message => {
                     message.reply("No such item is listed")
                 }
             } else if (message.body.trim().toLocaleLowerCase().startsWith("!confirm ") && message.body.trim().toLocaleLowerCase().endsWith(" return")) {
-                message.reply("Kam chalu ahe thod thabave!")
+                const item_id = args[1];
+                const item = db.getDataById(".records", item_id)
+                if (item) {
+                    if (!item.available) {
+
+                        const transaction_id = db.getDataById(".transactions", item_id, custom_id_field = true).id
+                        const return_stat = db.updateData(".transactions", transaction_id, {
+                            "returned_timestamp": Date.now(),
+                            "returned": true,
+                            "return_ack": false
+                        })
+
+                        if (return_stat) {
+                            const available_stat = db.updateData(".records", item_id, {
+                                "available": true
+                            })
+                            if (available_stat) {
+                                message.reply(`Your return transaction has been recorded, the item is now available for everyone`)
+                            }
+                        }
+
+                    } else {
+                        message.reply("unable to record transaction, item was not borrowed")
+                    }
+                } else {
+                    message.reply("No such item is listed or borrowed")
+                }
             } else {
                 message.reply("*Invalid Format* - !confirm <Item ID> borrow || !confirm <Item ID> return")
             }
@@ -211,7 +269,6 @@ function parseListMessage(message) {
 
         if (!hasUnwantedSymbols && isValidIndianContact) {
             const itemsArray = items.split(' ').map(item => item.trim().toLocaleLowerCase());
-            console.log(itemsArray)
             const keywordsArray = keywords.split(',').map(keyword => keyword.trim().toLocaleLowerCase());
 
             const result = {

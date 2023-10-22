@@ -1,15 +1,57 @@
 [
   {
-    "lender_contact": "1245678899",
-    "borrower_contact": "1245678899",
-    "item_id": "123343444434",
-    "timestamp": ""
+    "item_id": "dd73520d-0cd2-4809-b080-e2b85343d48e",
+    "type": "borrow",
+    "borrower_contact": "919405309002@c.us",
+    "borrow_duration": null,
+    "borrowed_timestamp": 1698007293678,
+    "returned_timestamp": 1698007491399,
+    "returned": true,
+    "id": "bf8cdcb1-de1f-4aae-9606-fff4859ef06e",
+    "return_ack": false
   },
   {
+    "item_id": "70894ff2-a222-43da-9491-7cd0e946400f",
+    "type": "borrow",
+    "borrower_contact": "919405309002@c.us",
+    "borrow_duration": null,
+    "borrowed_timestamp": 1698007458960,
+    "returned_timestamp": 1698007672697,
+    "returned": true,
+    "id": "882ef643-6d5a-4d47-960a-c46a54d98c0b",
+    "return_ack": false
+  },
+  {
+    "item_id": "dd73520d-0cd2-4809-b080-e2b85343d48e",
+    "type": "borrow",
+    "borrower_contact": "919405309002@c.us",
+    "borrow_duration": null,
+    "borrowed_timestamp": 1698007554907,
+    "returned_timestamp": 1698007587355,
+    "returned": true,
+    "id": "79f3b5c5-86c9-4747-a77f-da685d8d721d",
+    "return_ack": false
+  },
+  {
+    "item_id": "5b48046b-28c6-4daf-bb59-3052a2e18a4f",
+    "type": "borrow",
     "borrower_contact": "917507736625@c.us",
-    "duration": null,
-    "item_id": "7c3b20ea-0f1e-4d83-8cb0-4601c4ebb075",
-    "timestamp": 1697991201874,
-    "id": "99e18bf9-3300-447c-93eb-a69f168947ff"
+    "borrow_duration": null,
+    "borrowed_timestamp": 1698010300868,
+    "returned_timestamp": 1698010318380,
+    "returned": true,
+    "return_ack": false,
+    "id": "b4f54acc-d8f1-4f0f-9d2c-48cc0cc2c039"
+  },
+  {
+    "item_id": "5b48046b-28c6-4daf-bb59-3052a2e18a4f",
+    "type": "borrow",
+    "borrower_contact": "917507736625@c.us",
+    "borrow_duration": null,
+    "borrowed_timestamp": 1698010324880,
+    "returned_timestamp": "",
+    "returned": false,
+    "return_ack": false,
+    "id": "a6e504e7-6333-4fd1-8fcf-196c4549bdf6"
   }
 ]

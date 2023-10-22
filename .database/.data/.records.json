@@ -3,7 +3,7 @@
     "item": [
       "Cycle"
     ],
-    "available": false,
+    "available": true,
     "owner": "Shriram Khandbahale",
     "contact": "9400293203",
     "keywords": [
@@ -11,13 +11,14 @@
       "bike"
     ],
     "image_path": ".database/.data/.images/1697881305334Cycle.jpg",
+    "owner_chat_id": "94002932039400293203@c.us",
     "id": "8530151e-1f48-4ef1-866f-34974919f05f"
   },
   {
     "item": [
       "bicycle"
     ],
-    "available": false,
+    "available": true,
     "owner": "Shriram Khandbahale",
     "contact": "9400293203",
     "keywords": [
@@ -25,13 +26,14 @@
       "bike"
     ],
     "image_path": ".database/.data/.images/1697881340731Cycle.jpg",
+    "owner_chat_id": "9175077366259400293203@c.us",
     "id": "d974e169-2f85-44bc-aa61-51b8d9360544"
   },
   {
     "item": [
       "Cycle"
     ],
-    "available": false,
+    "available": true,
     "owner": "Shriram Khandbahale",
     "contact": "9400293203",
     "keywords": [
@@ -39,13 +41,14 @@
       "bike"
     ],
     "image_path": ".database/.data/.images/1697882356573Cycle.jpg",
+    "owner_chat_id": "9175077366259400293203@c.us",
     "id": "92a9b6c1-a02f-4bf8-8a06-43ef2ae3f090"
   },
   {
     "item": [
       "Cycle"
     ],
-    "available": false,
+    "available": true,
     "owner": "Shriram Khandbahale",
     "contact": "9400293203",
     "keywords": [
@@ -53,13 +56,14 @@
       "bike"
     ],
     "image_path": ".database/.data/.images/1697882511983Cycle.jpg",
+    "owner_chat_id": "9175077366259400293203@c.us",
     "id": "23b1e261-95a7-4c50-9f50-77e7e3337f04"
   },
   {
     "item": [
       "hehe"
     ],
-    "available": false,
+    "available": true,
     "owner": "Shriram Khandbahale",
     "contact": "9400293203",
     "keywords": [
@@ -67,13 +71,14 @@
       "bike"
     ],
     "image_path": ".database/.data/.images/1697882519143hehe.jpg",
+    "owner_chat_id": "9175077366259400293203@c.us",
     "id": "70894ff2-a222-43da-9491-7cd0e946400f"
   },
   {
     "item": [
       "mark shuturmurg"
     ],
-    "available": false,
+    "available": true,
     "owner": "Shriram",
     "contact": "9648684043",
     "keywords": [
@@ -82,14 +87,15 @@
       "instaa",
       "ostrich"
     ],
-    "image_path": ".database/.data/.images/1697884481138mark shuturmurg.jpg",
+    "image_path9400293203": ".database/.data/.images/1697884481138mark shuturmurg.jpg",
+    "owner_chat_id": "917507736625@c.us",
     "id": "642a03e4-ef4f-4ac8-b014-870967f41524"
   },
   {
     "item": [
       "laptop"
     ],
-    "available": false,
+    "available": true,
     "owner": "root",
     "contact": "9867543012",
     "keywords": [
@@ -101,13 +107,14 @@
       "pc"
     ],
     "image_path": ".database/.data/.images/1697891648518laptop.jpg",
+    "owner_chat_id": "917507736625@c.us",
     "id": "80aca1d2-b574-4512-97e6-cd6ea30a5604"
   },
   {
     "item": [
       "debugger"
     ],
-    "available": false,
+    "available": true,
     "owner": "tsc",
     "contact": "9835123456",
     "keywords": [
@@ -116,13 +123,14 @@
       "debugger"
     ],
     "image_path": ".database/.data/.images/1697893475818debugger.jpg",
+    "owner_chat_id": "917507736625@c.us",
     "id": "51590110-c1c4-4898-a9e5-de2df0a94942"
   },
   {
     "item": [
       "anything"
     ],
-    "available": false,
+    "available": true,
     "owner": "ayush",
     "contact": "9845241353",
     "keywords": [
@@ -130,13 +138,14 @@
     ],
     "note": null,
     "image_path": ".database/.data/.images/1697981097811anything.jpg",
+    "owner_chat_id": "917507736625@c.us",
     "id": "d66593ff-36c5-4256-8e66-e162d3e823d8"
   },
   {
     "item": [
       "anything"
     ],
-    "available": false,
+    "available": true,
     "owner": "ayush",
     "contact": "9845241353",
     "keywords": [
@@ -144,6 +153,7 @@
     ],
     "note": "this is note",
     "image_path": ".database/.data/.images/1697981145462anything.jpg",
+    "owner_chat_id": "917507736625@c.us",
     "id": "7c3b20ea-0f1e-4d83-8cb0-4601c4ebb075"
   },
   {
@@ -151,7 +161,7 @@
       "anything",
       "lib"
     ],
-    "available": false,
+    "available": true,
     "owner": "ayush",
     "contact": "9845241353",
     "keywords": [
@@ -159,6 +169,7 @@
     ],
     "note": "this is note",
     "image_path": ".database/.data/.images/1697985226803anything,lib.jpg",
+    "owner_chat_id": "917507736625@c.us",
     "id": "d39ad4e4-c2ba-4f27-bbe6-8dd68541bed2"
   }
 ]

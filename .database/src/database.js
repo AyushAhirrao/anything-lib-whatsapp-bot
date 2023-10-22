@@ -36,7 +36,7 @@ function database() {
     return {
         createCollection: (filename) => createCollection(DB_DIR, filename),
         getAllData: (filename) => getAllData(DB_DIR, filename),
-        getDataById: (filename, id) => getDataById(DB_DIR, filename, id),
+        getDataById: (filename, id, custom_id_field = false) => getDataById(DB_DIR, filename, id, custom_id_field),
         getDataByKeywords: (filename, keyword) => getDataByKeywords(DB_DIR, filename, keyword),
         getAllDataAndStatus: (filename) => getAllDataAndStatus(DB_DIR, filename),
         addData: (filename, newData) => addData(DB_DIR, filename, newData),
